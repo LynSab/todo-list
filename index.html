@@ -6,12 +6,30 @@
 <body>
     <h1>Todo List</h1>
     <h3>Add your items below</h3>
-    <form>
-        <input type="checkbox" id="item1">
-        <label for="item1">Clean bathroom</label><br>
 
-        <input type="checkbox" id="item2">
-        <label for="item2">Take out bin</label>
-    </form>
+    <form id="list"></form>
+    
+    <script>
+        const listItems = ['Clean bathroom', 'Take out bin']
+        const listForm = document.getElementById("list")
+        
+        listItems.forEach(function(item, index) {
+            const itemId = "item" + index
+
+            const newItem = document.createElement("input")
+            newItem.setAttribute("type", "checkbox")
+            newItem.setAttribute("id", itemId)
+
+            const newLabel = document.createElement("label")
+            newLabel.setAttribute("for", itemId)
+            newLabel.textContent = item
+
+            const newLine = document.createElement("br")
+
+            listForm.appendChild(newItem)
+            listForm.appendChild(newLabel)
+            listForm.appendChild(newLine)
+        })
+    </script>
 </body>
 </html>
