@@ -7,29 +7,49 @@
     <h1>Todo List</h1>
     <h3>Add your items below</h3>
 
+     <input type="text" id="addNewItem">
+     <button onclick="addToList()">Add</button><br><br>
+    
     <form id="list"></form>
     
     <script>
-        const listItems = ['Clean bathroom', 'Take out bin']
-        const listForm = document.getElementById("list")
+        const listItems = [
+            {task: 'Clean bathroom', checked: false}, 
+            {task: 'Take out bin', checked: true}
+        ]
+
+        function addToList() {
+            const addItem = document.getElementById("addNewItem").value
+            listItems.push({task: addItem, checked: false})
+            createList()
+        }
         
-        listItems.forEach(function(item, index) {
-            const itemId = "item" + index
+        function createList() {
+            const listForm = document.getElementById("list")
+            listForm.innerHTML = ""
 
-            const newItem = document.createElement("input")
-            newItem.setAttribute("type", "checkbox")
-            newItem.setAttribute("id", itemId)
+            listItems.forEach(function(item, index) {
+                const itemId = "item" + index
+    
+                const newItem = document.createElement("input")
+                newItem.setAttribute("type", "checkbox")
+                newItem.setAttribute("id", itemId)
+                newItem.checked = item.checked
+    
+                const newLabel = document.createElement("label")
+                newLabel.setAttribute("for", itemId)
+                newLabel.textContent = item.task
+    
+                const newLine = document.createElement("br")
+    
+                listForm.appendChild(newItem)
+                listForm.appendChild(newLabel)
+                listForm.appendChild(newLine)
+            })
+        }
 
-            const newLabel = document.createElement("label")
-            newLabel.setAttribute("for", itemId)
-            newLabel.textContent = item
+        createList()
 
-            const newLine = document.createElement("br")
-
-            listForm.appendChild(newItem)
-            listForm.appendChild(newLabel)
-            listForm.appendChild(newLine)
-        })
     </script>
 </body>
 </html>
