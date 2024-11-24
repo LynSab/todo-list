@@ -2,6 +2,14 @@
 <html>
 <head>
     <title>Todo List</title>
+    <style>
+        #delete-button {
+            margin-left: 10px;
+        }
+        #edit-button {
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Todo List</h1>
@@ -21,10 +29,20 @@
         function addToList() {
             const addItem = document.getElementById("addNewItem").value
             listItems.push({task: addItem, checked: false})
-            createList()
+            reloadList()
+        }
+
+        function removeItem(index) {
+            listItems.splice(index, 1)
+            reloadList()
+        }
+
+        function editItem(index) {
+            listItems[index].task = "changed item"
+            reloadList()
         }
         
-        function createList() {
+        function reloadList() {
             const listForm = document.getElementById("list")
             listForm.innerHTML = ""
 
@@ -39,16 +57,28 @@
                 const newLabel = document.createElement("label")
                 newLabel.setAttribute("for", itemId)
                 newLabel.textContent = item.task
+
+                const deleteButton = document.createElement("button")
+                deleteButton.textContent = "x"
+                deleteButton.setAttribute("id", 'delete-button')
+                deleteButton.setAttribute("onclick", "removeItem(" + index + ")")
+
+                const editButton = document.createElement("button")
+                editButton.textContent = "Edit"
+                editButton.setAttribute("id", 'edit-button')
+                editButton.setAttribute("onclick", "editItem(" + index + ")")
     
                 const newLine = document.createElement("br")
     
                 listForm.appendChild(newItem)
                 listForm.appendChild(newLabel)
+                listForm.appendChild(editButton)
+                listForm.appendChild(deleteButton)
                 listForm.appendChild(newLine)
             })
         }
 
-        createList()
+        reloadList()
 
     </script>
 </body>
