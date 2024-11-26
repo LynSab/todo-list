@@ -22,14 +22,18 @@
     
     <script>
         const listItems = [
-            {task: 'Clean bathroom', checked: false}, 
-            {task: 'Take out bin', checked: true}
+            {task: 'Clean bathroom', checked: false, edit: false}, 
+            {task: 'Take out bin', checked: true, edit: false}
         ]
 
         function addToList() {
             const addItem = document.getElementById("addNewItem").value
-            listItems.push({task: addItem, checked: false})
+            listItems.push({task: addItem, checked: false, edit: false})
             reloadList()
+        }
+
+        function checkUncheck(index) {
+            listItems[index].checked = !listItems[index].checked
         }
 
         function removeItem(index) {
@@ -38,7 +42,13 @@
         }
 
         function editItem(index) {
-            listItems[index].task = "changed item"
+            listItems[index].task = document.getElementById("newTaskText").value
+            listItems[index].edit = !listItems[index].edit
+            reloadList()
+        }
+
+        function editMode(index) {
+            listItems[index].edit = !listItems[index].edit
             reloadList()
         }
         
@@ -53,25 +63,43 @@
                 newItem.setAttribute("type", "checkbox")
                 newItem.setAttribute("id", itemId)
                 newItem.checked = item.checked
-    
-                const newLabel = document.createElement("label")
-                newLabel.setAttribute("for", itemId)
-                newLabel.textContent = item.task
+                newItem.setAttribute("onclick", "checkUncheck(" + index + ")")
+
+                let taskText
+
+                if (item.edit == false) {
+                    taskText = document.createElement("label")
+                    taskText.setAttribute("for", itemId)
+                    taskText.textContent = item.task
+                } else {
+                    taskText = document.createElement("input")
+                    taskText.setAttribute("type", "text")
+                    taskText.setAttribute("id", 'newTaskText')
+                }
 
                 const deleteButton = document.createElement("button")
                 deleteButton.textContent = "x"
                 deleteButton.setAttribute("id", 'delete-button')
                 deleteButton.setAttribute("onclick", "removeItem(" + index + ")")
 
-                const editButton = document.createElement("button")
-                editButton.textContent = "Edit"
-                editButton.setAttribute("id", 'edit-button')
-                editButton.setAttribute("onclick", "editItem(" + index + ")")
+                let editButton
+
+                if (item.edit == false) {
+                    editButton = document.createElement("button")
+                    editButton.textContent = "Edit"
+                    editButton.setAttribute("id", 'edit-button')
+                    editButton.setAttribute("onclick", "editMode(" + index + ")")
+                } else {
+                    editButton = document.createElement("button")
+                    editButton.textContent = "Save"
+                    editButton.setAttribute("id", 'save-button')
+                    editButton.setAttribute("onclick", "editItem(" + index + ")")
+                }
     
                 const newLine = document.createElement("br")
     
                 listForm.appendChild(newItem)
-                listForm.appendChild(newLabel)
+                listForm.appendChild(taskText)
                 listForm.appendChild(editButton)
                 listForm.appendChild(deleteButton)
                 listForm.appendChild(newLine)
