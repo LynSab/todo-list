@@ -21,29 +21,42 @@
     <form id="list"></form>
     
     <script>
-        const listItems = [
-            {task: 'Clean bathroom', checked: false, edit: false}, 
-            {task: 'Take out bin', checked: true, edit: false}
-        ]
+        function getStoredArray() {
+            if(localStorage.getItem("array") !== null) {
+                return JSON.parse(localStorage.getItem("array"))
+            } else {
+                return []
+            }
+        }
+        let listItems = getStoredArray()
+
+        function storeArray() {
+            const stringList = JSON.stringify(listItems)
+            localStorage.setItem("array", stringList)
+        }
 
         function addToList() {
             const addItem = document.getElementById("addNewItem").value
             listItems.push({task: addItem, checked: false, edit: false})
+            storeArray()
             reloadList()
         }
 
         function checkUncheck(index) {
             listItems[index].checked = !listItems[index].checked
+            storeArray()
         }
 
         function removeItem(index) {
             listItems.splice(index, 1)
+            storeArray()
             reloadList()
         }
 
         function editItem(index) {
             listItems[index].task = document.getElementById("newTaskText").value
             listItems[index].edit = !listItems[index].edit
+            storeArray()
             reloadList()
         }
 
@@ -66,15 +79,24 @@
                 newItem.setAttribute("onclick", "checkUncheck(" + index + ")")
 
                 let taskText
+                let editButton
 
                 if (item.edit == false) {
                     taskText = document.createElement("label")
                     taskText.setAttribute("for", itemId)
                     taskText.textContent = item.task
+                    editButton = document.createElement("button")
+                    editButton.textContent = "Edit"
+                    editButton.setAttribute("id", 'edit-button')
+                    editButton.setAttribute("onclick", "editMode(" + index + ")")
                 } else {
                     taskText = document.createElement("input")
                     taskText.setAttribute("type", "text")
                     taskText.setAttribute("id", 'newTaskText')
+                    editButton = document.createElement("button")
+                    editButton.textContent = "Save"
+                    editButton.setAttribute("id", 'save-button')
+                    editButton.setAttribute("onclick", "editItem(" + index + ")")
                 }
 
                 const deleteButton = document.createElement("button")
@@ -82,20 +104,6 @@
                 deleteButton.setAttribute("id", 'delete-button')
                 deleteButton.setAttribute("onclick", "removeItem(" + index + ")")
 
-                let editButton
-
-                if (item.edit == false) {
-                    editButton = document.createElement("button")
-                    editButton.textContent = "Edit"
-                    editButton.setAttribute("id", 'edit-button')
-                    editButton.setAttribute("onclick", "editMode(" + index + ")")
-                } else {
-                    editButton = document.createElement("button")
-                    editButton.textContent = "Save"
-                    editButton.setAttribute("id", 'save-button')
-                    editButton.setAttribute("onclick", "editItem(" + index + ")")
-                }
-    
                 const newLine = document.createElement("br")
     
                 listForm.appendChild(newItem)
@@ -103,6 +111,7 @@
                 listForm.appendChild(editButton)
                 listForm.appendChild(deleteButton)
                 listForm.appendChild(newLine)
+                
             })
         }
 
